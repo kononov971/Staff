@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <form method="post">
+        <input type="text" name="name" placeholder="Имя"/>
+        <input type="text" name="location" placeholder="Адрес"/>
+        <input type="text" name="directorName" placeholder="Имя директора"/>
+        <input type="text" name="higherDepartmentName" placeholder="Вышестоящий отдел"/>
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<b th:text="${message}"></b>
+<div>Список отделов</div>
+<form method="post" action="/departments/filter">
+    <input type="text" name="higherDepartmentName"/>
+    <button type="submit">Найти</button>
+</form>
+<tr th:each="department : ${departments}">
+    <b th:text="${department.id}"></b>
+    <b th:text="${department.name}"></b>
+    <b th:text="${department.director}"></b>
+    <b th:text="${department.higherDepartment}"></b>
+    <br>
+</tr>
+</body>
+</html>

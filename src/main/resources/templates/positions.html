@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <form method="post">
+        <input type="text" name="name" placeholder="Имя"/>
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<div>Список должностей</div>
+<tr th:each="position : ${positions}">
+    <b th:text="${position.id}"></b>
+    <b th:text="${position.name}"></b>
+    <br>
+</tr>
+</body>
+</html>

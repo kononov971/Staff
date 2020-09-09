@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <form method="post">
+        <input type="text" name="fullName" placeholder="ФИО"/>
+        <input type="date" name="birthDate" placeholder="Дата рождения"/>
+        <input type="text" name="educationName" placeholder="Образование"/>
+        <input type="text" name="departmentName" placeholder="Отдел"/>
+        <input type="text" name="positionName" placeholder="Должность"/>
+        <input type="text" name="salary" placeholder="Оклад"/>
+        <input type="text" name="telephone" placeholder="Телефон"/>
+        <input type="date" name="dateOfAppointment" placeholder="Дата приема"/>
+        <input type="date" name="dateOfDismissals" placeholder="Дата увольнения"/>
+        <button type="submit">Добавить</button>
+    </form>
+</div>
+<b th:text="${message}"></b>
+<div>Список сотрудников</div>
+<form method="post" action="/employees/filter">
+    <input type="text" name="filter"/>
+    <button type="submit">Найти</button>
+</form>
+<tr th:each="employee : ${employees}">
+    <b th:text="${employee.id}"></b>
+    <b th:text="${employee.fullName}"></b>
+    <b th:text="${employee.birthDate}"></b>
+    <b th:text="${employee.education.name}"></b>
+    <b th:text="${employee.department.name}"></b>
+    <b th:text="${employee.position.name}"></b>
+    <b th:text="${employee.salary}"></b>
+    <b th:text="${employee.telephone}"></b>
+    <b th:text="${employee.dateOfAppointment}"></b>
+    <b th:text="${employee.dateOfDismissals}"></b>
+    <br>
+</tr>
+</body>
+</html>
