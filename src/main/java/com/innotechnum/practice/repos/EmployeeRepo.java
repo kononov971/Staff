@@ -12,5 +12,8 @@ public interface EmployeeRepo extends CrudRepository<Employee, Long> {
     Employee findByFullName(String fullName);
     List<Employee> findByBirthDateBetween(LocalDate date1, LocalDate date2);
     List<Employee> findBySalaryAfter(BigDecimal salary);
+    List<Employee> findByDateOfAppointmentBetweenAndSalaryBetweenAndBirthDateAfter(LocalDate date1, LocalDate date2,
+                                                                           BigDecimal salary1, BigDecimal salary2,
+                                                                           LocalDate birthDate);
 
 }

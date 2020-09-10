@@ -156,4 +156,36 @@ public class EmployeesController {
         model.addAttribute("employees", employees);
         return "employees";
     }
+
+    @PostMapping("filter2")
+    public String filter2(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date1,
+                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date2,
+                          @RequestParam String salary1, @RequestParam String salary2,
+                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate, Model model) {
+        if (date1 == null) {
+            date1 = LocalDate.of(1900, 1, 1);
+        }
+
+        if(date2 == null) {
+            date2 = LocalDate.now();
+        }
+
+        if(salary1.trim().isEmpty()) {
+            salary1 = "0";
+        }
+
+        if(salary2.trim().isEmpty()) {
+            salary2 = "999999999";
+
+        }
+
+        if (birthDate == null) {
+            birthDate = LocalDate.of(1900, 1, 1);
+        }
+
+        Iterable<Employee> employees = employeeRepo.findByDateOfAppointmentBetweenAndSalaryBetweenAndBirthDateAfter(date1,
+                date2, new BigDecimal(salary1), new BigDecimal(salary2), birthDate);
+        model.addAttribute("employees", employees);
+        return "employees";
+    }
 }
