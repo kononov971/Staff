@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,14 +20,19 @@ import java.time.LocalDate;
 @Controller
 @RequestMapping("/employees")
 public class EmployeesController {
-    @Autowired
+
     private EmployeeRepo employeeRepo;
-    @Autowired
     private EducationRepo educationRepo;
-    @Autowired
     private DepartmentRepo departmentRepo;
-    @Autowired
     private PositionRepo positionRepo;
+
+    public EmployeesController(EmployeeRepo employeeRepo, EducationRepo educationRepo, DepartmentRepo departmentRepo
+            , PositionRepo positionRepo) {
+        this.employeeRepo = employeeRepo;
+        this.educationRepo = educationRepo;
+        this.departmentRepo = departmentRepo;
+        this.positionRepo = positionRepo;
+    }
 
     @GetMapping
     public String main(Model model) {
@@ -76,7 +78,7 @@ public class EmployeesController {
         return "employees";
     }
 
-    @PostMapping("remove")
+    @DeleteMapping()
     public String remove(@RequestParam Long id, Model model) {
         employeeRepo.deleteById(id);
 
@@ -89,7 +91,8 @@ public class EmployeesController {
     public String dismissals(@RequestParam Long id,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfDismissals,
                              Model model) {
-        Employee employee = employeeRepo.findById(id).get();
+        Employee employee = employeeRepo.findById(id).filter(department1 -> department1.getId()
+                .equals(id)).orElse(null);
         if(!(dateOfDismissals == null)) {
             employee.setDateOfDismissals(dateOfDismissals);
         } else {
@@ -102,9 +105,10 @@ public class EmployeesController {
         return "employees";
     }
 
-    @PostMapping("transfer")
+    @PutMapping("transfer")
     public String dismissals(@RequestParam Long id, @RequestParam String departmentName, Model model) {
-        Employee employee = employeeRepo.findById(id).get();
+        Employee employee = employeeRepo.findById(id).filter(department1 -> department1.getId()
+                .equals(id)).orElse(null);
         Department department = departmentRepo.findByName(departmentName);
         if(!(department == null) && !(employee.getDepartment().equals(department))) {
             employee.setDepartment(department);
@@ -118,12 +122,13 @@ public class EmployeesController {
         return "employees";
     }
 
-    @PostMapping("correction")
+    @PutMapping()
     public String correction(@RequestParam Long id, @RequestParam String fullName,
                              @RequestParam String educationName,
                              @RequestParam String positionName, @RequestParam String salary,
                              @RequestParam String telephone, Model model){
-        Employee employee = employeeRepo.findById(id).get();
+        Employee employee = employeeRepo.findById(id).filter(department1 -> department1.getId()
+                .equals(id)).orElse(null);
         if (!fullName.trim().isEmpty()) {
             employee.setFullName(fullName);
         }

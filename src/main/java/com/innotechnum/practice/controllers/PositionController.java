@@ -5,16 +5,18 @@ import com.innotechnum.practice.repos.PositionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/positions")
 public class PositionController {
-    @Autowired
+
     PositionRepo positionRepo;
+
+    @Autowired
+    public PositionController(PositionRepo positionRepo) {
+        this.positionRepo = positionRepo;
+    }
 
     @GetMapping
     public String main(Model model) {
@@ -34,7 +36,7 @@ public class PositionController {
         return "positions";
     }
 
-    @PostMapping("remove")
+    @DeleteMapping()
     public String remove(@RequestParam Long id, Model model) {
         positionRepo.deleteById(id);
 

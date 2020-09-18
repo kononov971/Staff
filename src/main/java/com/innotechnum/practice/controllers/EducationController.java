@@ -5,16 +5,18 @@ import com.innotechnum.practice.repos.EducationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/educations")
 public class EducationController {
-    @Autowired
+
     EducationRepo educationRepo;
+
+    @Autowired
+    public EducationController(EducationRepo educationRepo) {
+        this.educationRepo = educationRepo;
+    }
 
     @GetMapping
     public String main(Model model) {
@@ -33,7 +35,7 @@ public class EducationController {
         return "educations";
     }
 
-    @PostMapping("remove")
+    @DeleteMapping()
     public String remove(@RequestParam Long id, Model model) {
         educationRepo.deleteById(id);
 
