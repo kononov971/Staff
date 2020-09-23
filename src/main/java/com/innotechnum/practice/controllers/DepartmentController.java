@@ -16,11 +16,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/departments")
 public class DepartmentController {
 
-    private DepartmentRepo departmentRepo;
+    public DepartmentRepo departmentRepo;
     private EmployeeRepo employeeRepo;
 
     @Autowired
@@ -31,27 +31,25 @@ public class DepartmentController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('staff:read')")
-    public String main(Model model) {
+    public Iterable<Department> get() {
         Iterable<Department> departments = departmentRepo.findAll();
-        model.addAttribute("departments", departments);
-        return "departments";
+
+        return departments;
     }
 
     @GetMapping("{id}")
     @PreAuthorize("hasAuthority('staff:write')")
-    public String getById(@PathVariable Long id, Model model) {
+    public Department getById(@PathVariable Long id) {
         Department department =
                 departmentRepo.findById(id).filter(department1 -> department1.getId().equals(id)).orElse(null);
 
-        model.addAttribute("departments", Arrays.asList(department));
-
-        return "departments";
+        return department;
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('staff:write')")
-    public String add(@RequestParam String name, @RequestParam String location,
-                      @RequestParam String directorName, @RequestParam String higherDepartmentName, Model model) {
+    public Department add(@RequestParam String name, @RequestParam String location,
+                      @RequestParam String directorName, @RequestParam String higherDepartmentName) {
         Employee director = employeeRepo.findByFullName(directorName);
 
         Department higherDepartment = departmentRepo.findByName(higherDepartmentName);
@@ -59,15 +57,12 @@ public class DepartmentController {
         Department department = new Department(name, location, director, higherDepartment);
         departmentRepo.save(department);
 
-        Iterable<Department> departments = departmentRepo.findAll();
-        model.addAttribute("departments", departments);
-
-        return "departments";
+        return department;
     }
 
     @GetMapping("filter")
     @PreAuthorize("hasAuthority('staff:read')")
-    public String filter(@RequestParam String higherDepartmentName, Model model) {
+    public Iterable<Department> filter(@RequestParam String higherDepartmentName) {
         Iterable<Department> departments;
         if (!higherDepartmentName.trim().isEmpty()) {
             Department higherDepartment = departmentRepo.findByName(higherDepartmentName);
@@ -75,19 +70,17 @@ public class DepartmentController {
         } else {
             departments = departmentRepo.findAll();
         }
-        model.addAttribute("departments", departments);
 
-        return "departments";
+        return departments;
     }
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('staff:write')")
-    public String remove(@RequestParam Long id, Model model) {
+    public Iterable<Department> remove(@RequestParam Long id) {
         departmentRepo.deleteById(id);
 
         Iterable<Department> departments = departmentRepo.findAll();
-        model.addAttribute("departments", departments);
-        return "departments";
+        return departments;
     }
 
     @PutMapping("director")
@@ -101,7 +94,7 @@ public class DepartmentController {
                         .equals(departmentId)).orElse(null);
 
         if (director != null) {
-            department.setDirector(director);
+          //  department.setDirector(director);
         } else {
             model.addAttribute("message", "некорректный id начальника");
         }
@@ -158,4 +151,5 @@ public class DepartmentController {
         model.addAttribute("departments", departments);
         return "departments";
     }
+
 }

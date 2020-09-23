@@ -5,13 +5,13 @@ import javax.persistence.*;
 @Entity
 public class Department {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String location;
-    @ManyToOne
-    @JoinColumn(name = "director_id", nullable = true)
+   @ManyToOne
+   @JoinColumn(name = "director_id", nullable = true)
     private Employee director;
     @ManyToOne
     @JoinColumn(name = "higher_department", nullable = true)

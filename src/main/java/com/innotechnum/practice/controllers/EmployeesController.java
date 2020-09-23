@@ -35,7 +35,7 @@ public class EmployeesController {
     }
 
     @GetMapping
-    public String main(Model model) {
+    public String get(Model model) {
         Iterable<Employee> employees = employeeRepo.findAll();
         model.addAttribute("employees", employees);
         return "employees";
@@ -53,7 +53,6 @@ public class EmployeesController {
         Department department = departmentRepo.findByName(departmentName);
         Position position = positionRepo.findByName(positionName);
 
-        educationRepo.save(education);
         Employee employee = new Employee(fullName, birthDate, education, department, position,
                 new BigDecimal(salary), telephone, dateOfAppointment, dateOfDismissals);
         employeeRepo.save(employee);
@@ -91,7 +90,7 @@ public class EmployeesController {
     public String dismissals(@RequestParam Long id,
                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfDismissals,
                              Model model) {
-        Employee employee = employeeRepo.findById(id).filter(department1 -> department1.getId()
+        Employee employee = employeeRepo.findById(id).filter(employee1 -> employee1.getId()
                 .equals(id)).orElse(null);
         if(!(dateOfDismissals == null)) {
             employee.setDateOfDismissals(dateOfDismissals);
@@ -107,7 +106,7 @@ public class EmployeesController {
 
     @PutMapping("transfer")
     public String dismissals(@RequestParam Long id, @RequestParam String departmentName, Model model) {
-        Employee employee = employeeRepo.findById(id).filter(department1 -> department1.getId()
+        Employee employee = employeeRepo.findById(id).filter(employee1 -> employee1.getId()
                 .equals(id)).orElse(null);
         Department department = departmentRepo.findByName(departmentName);
         if(!(department == null) && !(employee.getDepartment().equals(department))) {
@@ -127,7 +126,7 @@ public class EmployeesController {
                              @RequestParam String educationName,
                              @RequestParam String positionName, @RequestParam String salary,
                              @RequestParam String telephone, Model model){
-        Employee employee = employeeRepo.findById(id).filter(department1 -> department1.getId()
+        Employee employee = employeeRepo.findById(id).filter(employee1 -> employee1.getId()
                 .equals(id)).orElse(null);
         if (!fullName.trim().isEmpty()) {
             employee.setFullName(fullName);
@@ -162,7 +161,7 @@ public class EmployeesController {
         return "employees";
     }
 
-    @PostMapping("filter2")
+    @GetMapping("filter2")
     public String filter2(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date1,
                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date2,
                           @RequestParam String salary1, @RequestParam String salary2,
@@ -188,7 +187,8 @@ public class EmployeesController {
             birthDate = LocalDate.of(1900, 1, 1);
         }
 
-        Iterable<Employee> employees = employeeRepo.findByDateOfAppointmentBetweenAndSalaryBetweenAndBirthDateAfter(date1,
+        Iterable<Employee> employees =
+                employeeRepo.findByDateOfAppointmentBetweenAndSalaryBetweenAndBirthDateAfter2(date1,
                 date2, new BigDecimal(salary1), new BigDecimal(salary2), birthDate);
         model.addAttribute("employees", employees);
         return "employees";

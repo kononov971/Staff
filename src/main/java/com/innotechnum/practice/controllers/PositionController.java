@@ -45,4 +45,15 @@ public class PositionController {
         return "positions";
     }
 
+    @GetMapping("qa")
+    public String add1(@RequestParam String name, Model model) {
+        Position position = new Position(name);
+        positionRepo.save(position);
+
+        Iterable<Position> positions = positionRepo.findAll();
+        model.addAttribute("positions", positions);
+
+        return "positions";
+    }
+
 }
